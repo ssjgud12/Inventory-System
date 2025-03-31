@@ -11,16 +11,11 @@ public class InsertExample {
         try {
 
             // Insert a new record into the "users" table
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO users (username, password) VALUES (?, ?)");
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO user (username, email) VALUES (?, ?)");
             stmt.setString(1, "Des");
             stmt.setString(2, "software");
             stmt.executeUpdate();
 
-            // Insert a new record into the "emails" table, referencing the new user
-            stmt = conn.prepareStatement("INSERT INTO emails (user_id, email) VALUES (?, ?)");
-            stmt.setInt(1, getLastInsertId(conn));
-            stmt.setString(2, "des@atu.ie");
-            stmt.executeUpdate();
 
             System.out.println("Insert completed successfully.");
         } catch (SQLException ex) {

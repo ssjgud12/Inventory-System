@@ -4,9 +4,8 @@ import java.sql.*;
 
 public class SelectExample {
     public static void main(String[] args) {
-        String selectSQL = "SELECT u.username, u.password, e.email " +
-                "FROM user u " +
-                "JOIN emails e ON u.id = e.user_id";
+        String selectSQL = "SELECT u.username, u.email " +
+                "FROM user u " ;
 
         try (Connection connection = DatabaseUtils.getConnection();
              Statement statement = connection.createStatement();
@@ -14,10 +13,9 @@ public class SelectExample {
 
             while (resultSet.next()) {
                 String user = resultSet.getString("username");
-                String pass = resultSet.getString("password");
                 String email = resultSet.getString("email");
 
-                System.out.println("Username: " + user + ", Password: " + pass + ", Email: " + email);
+                System.out.println("Username: " + user + ", Password: " + ", Email: " + email);
             }
         } catch (SQLException e) {
             e.printStackTrace();

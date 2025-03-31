@@ -13,9 +13,8 @@ public class InsertTransactionExample {
             conn.setAutoCommit(false);
 
             // Insert a new record into the "users" table
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO users (username, password) VALUES (?, ?)");
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO user (username) VALUES (?)");
             stmt.setString(1, "Paul");
-            stmt.setString(2, "qwerty");
             stmt.executeUpdate();
 
             // Retrieve the generated key for the new record
@@ -27,12 +26,6 @@ public class InsertTransactionExample {
                 }
 
                  */
-
-            // Insert a new record into the "emails" table, referencing the new user
-            stmt = conn.prepareStatement("INSERT INTO emails (user_id, email) VALUES (?, ?)");
-            stmt.setInt(1, getLastInsertId(conn));
-            stmt.setString(2, "paul@atu.com");
-            stmt.executeUpdate();
 
             // Commit the transaction
             conn.commit();
