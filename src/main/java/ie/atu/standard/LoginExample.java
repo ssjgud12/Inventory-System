@@ -28,7 +28,7 @@ public class LoginExample {
             } else {
                 System.out.println("❌ Login failed: Invalid username or password.");
             }
-
+//changes
         } catch (SQLException e) {
             System.out.println("🚨 Database error:");
             e.printStackTrace();

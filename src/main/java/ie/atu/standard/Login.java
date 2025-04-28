@@ -1,7 +1,6 @@
 package ie.atu.standard;
 
 public class Login {
-<<<<<<< HEAD
     private String username;
     private String password;
 
@@ -18,6 +17,4 @@ public class Login {
         return password;
     }
 }
-=======
-}
->>>>>>> a35b1978d60cf86a94e2db533f7e6a340a0229ff
+
