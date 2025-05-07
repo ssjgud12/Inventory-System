@@ -109,6 +109,7 @@ public class Dashboard {
         boolean managing = true;
         while (managing) {
             System.out.println("\nProduct Management");
+            listProducts();
             System.out.println("1. Add Product\n2. Edit Product\n3. Delete Product\n4. Back");
             System.out.print("Choose an option: ");
             String choice = scanner.nextLine().trim();
@@ -180,6 +181,29 @@ public class Dashboard {
         }
     }
 
+    private static void listProducts() {
+        String query = "SELECT Product_ID, Product_Name, Price, Stock_Quantity FROM product";
+        try (Connection conn = DatabaseUtils.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            System.out.println("\nAvailable Products:");
+            System.out.printf("%-5s %-25s %-10s %-12s%n", "ID", "Product", "Price (€)", "Stock");
+            System.out.println("-----------------------------------------------------------");
+
+            while (rs.next()) {
+                int id = rs.getInt("Product_ID");
+                String name = rs.getString("Product_Name");
+                double price = rs.getDouble("Price");
+                int stock = rs.getInt("Stock_Quantity");
+                System.out.printf("%-5d %-25s %-10.2f %-12d%n", id, name, price, stock);
+            }
+        } catch (SQLException e) {
+            System.out.println("Could not load product list.");
+            e.printStackTrace();
+        }
+    }
+
     private static void viewAllOrders() {
         String query = "SELECT o.Order_ID, u.Username, o.Total_Amount, o.Order_Date FROM orders o JOIN user u ON o.User_ID = u.User_ID ORDER BY o.Order_Date DESC";
         try (Connection conn = DatabaseUtils.getConnection();
@@ -210,7 +234,7 @@ public class Dashboard {
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
-            System.out.println("\n=== Current Stock Levels ===");
+            System.out.println("\nCurrent Stock Levels");
             System.out.printf("%-25s %-10s%n", "Product", "Stock");
             System.out.println("-------------------------------");
 
@@ -227,14 +251,12 @@ public class Dashboard {
     }
 
     private static void viewCustomerOrders() {
-        String query = "SELECT o.Order_ID, u.Username, o.Total_Amount, o.Order_Date " +
-                "FROM orders o JOIN user u ON o.User_ID = u.User_ID " +
-                "ORDER BY o.Order_Date DESC";
+        String query = "SELECT o.Order_ID, u.Username, o.Total_Amount, o.Order_Date FROM orders o JOIN user u ON o.User_ID = u.User_ID ORDER BY o.Order_Date DESC";
         try (Connection conn = DatabaseUtils.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
-            System.out.println("\n=== Order History ===");
+            System.out.println("\nOrder History");
             System.out.printf("%-10s %-15s %-10s %-20s%n", "Order ID", "Username", "Total (€)", "Date");
             System.out.println("--------------------------------------------------------------");
 
@@ -243,8 +265,7 @@ public class Dashboard {
                         rs.getInt("Order_ID"),
                         rs.getString("Username"),
                         rs.getDouble("Total_Amount"),
-                        rs.getTimestamp("Order_Date").toString()
-                );
+                        rs.getTimestamp("Order_Date"));
             }
 
         } catch (SQLException e) {
@@ -254,36 +275,15 @@ public class Dashboard {
     }
 
     private static void viewProducts(Scanner scanner) {
-        String query = "SELECT Product_ID, Product_Name, Price, Stock_Quantity FROM product";
-        try (Connection conn = DatabaseUtils.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
-
-            System.out.println("\n=== Product Catalog ===");
-            System.out.printf("%-5s %-25s %-10s %-12s%n", "ID", "Product", "Price (€)", "Stock");
-            System.out.println("-----------------------------------------------------------");
-
-            while (rs.next()) {
-                int id = rs.getInt("Product_ID");
-                String name = rs.getString("Product_Name");
-                double price = rs.getDouble("Price");
-                int stock = rs.getInt("Stock_Quantity");
-                System.out.printf("%-5d %-25s %-10.2f %-12d%n", id, name, price, stock);
-            }
-
-            System.out.print("Enter Product ID to add to basket or 0 to cancel: ");
-            int productId = Integer.parseInt(scanner.nextLine().trim());
-            if (productId > 0) {
-                System.out.print("Quantity: ");
-                int qty = Integer.parseInt(scanner.nextLine().trim());
-                System.out.print("Enter your username: ");
-                String username = scanner.nextLine().trim();
-                addToBasket(username, productId, qty);
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Failed to load products.");
-            e.printStackTrace();
+        listProducts();
+        System.out.print("Enter Product ID to add to basket or 0 to cancel: ");
+        int productId = Integer.parseInt(scanner.nextLine().trim());
+        if (productId > 0) {
+            System.out.print("Quantity: ");
+            int qty = Integer.parseInt(scanner.nextLine().trim());
+            System.out.print("Enter your username: ");
+            String username = scanner.nextLine().trim();
+            addToBasket(username, productId, qty);
         }
     }
 
@@ -324,7 +324,7 @@ public class Dashboard {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
 
-            System.out.println("\n=== Basket Contents ===");
+            System.out.println("\nBasket Contents");
             System.out.printf("%-25s %-10s %-10s%n", "Product", "Qty", "Total (€)");
             System.out.println("------------------------------------------------");
 
@@ -354,4 +354,3 @@ public class Dashboard {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 }
-
