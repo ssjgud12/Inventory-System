@@ -2,6 +2,7 @@ package ie.atu.standard;
 
 import java.sql.*;
 import java.util.Scanner;
+import ie.atu.pool.DatabaseUtils;
 
 public class ProductCatalogService {
 
