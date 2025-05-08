@@ -19,7 +19,7 @@ public class AdminDashboard {
 
             switch (choice) {
                 case "1":
-                    viewUsers();
+                    ViewUsers.displayAllUsers();
                     break;
                 case "2":
                     ProductManagementService.manageProducts(scanner);
@@ -36,8 +36,5 @@ public class AdminDashboard {
         }
     }
 
-    private static void viewUsers() {
-        System.out.println("\nViewing all users...");
 
-    }
 }
