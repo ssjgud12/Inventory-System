@@ -17,7 +17,7 @@ public class ManagerDashboard {
 
             switch (choice) {
                 case "1" -> StockService.showStockReport();
-                case "2" -> OrderService.listAllOrders();
+                case "2" -> OrderService.viewOrders();
                 case "3" -> {
                     System.out.println("\nLogging out...");
                     loggedIn = false;
