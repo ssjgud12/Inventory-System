@@ -1,8 +1,11 @@
 package ie.atu.standard;
 
 import ie.atu.pool.DatabaseUtils;
+
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class BasketService {
 
@@ -17,17 +20,17 @@ public class BasketService {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
 
-            System.out.println("\nBasket Contents\n");
+            System.out.println("\nYour Basket:");
             System.out.printf("%-25s %-10s %-10s%n", "Product", "Qty", "Total (€)");
-            System.out.println("---------------------------------------------");
+            System.out.println("------------------------------------------------");
 
             double totalAmount = 0;
             while (rs.next()) {
-                System.out.printf("%-25s %-10d %-10.2f%n",
-                        rs.getString("Product_Name"),
-                        rs.getInt("Quantity"),
-                        rs.getDouble("Total"));
-                totalAmount += rs.getDouble("Total");
+                String name = rs.getString("Product_Name");
+                int qty = rs.getInt("Quantity");
+                double total = rs.getDouble("Total");
+                totalAmount += total;
+                System.out.printf("%-25s %-10d %-10.2f%n", name, qty, total);
             }
 
             if (totalAmount > 0) {
@@ -38,16 +41,42 @@ public class BasketService {
                     checkoutBasket(username);
                 }
             } else {
-                System.out.println("Your basket is empty.\n");
+                System.out.println("Your basket is empty.");
             }
 
         } catch (SQLException e) {
-            System.out.println("Failed to retrieve basket.");
+            System.out.println("Error retrieving basket.");
             e.printStackTrace();
         }
     }
 
-    public static void checkoutBasket(String username) {
+    public static void addToBasket(String username, int productId, int quantity) {
+        String getUserId = "SELECT User_ID FROM user WHERE Username = ?";
+        String insertBasket = "INSERT INTO basket (User_ID, Product_ID, Quantity) VALUES (?, ?, ?)";
+
+        try (Connection conn = DatabaseUtils.getConnection();
+             PreparedStatement userStmt = conn.prepareStatement(getUserId);
+             PreparedStatement basketStmt = conn.prepareStatement(insertBasket)) {
+
+            userStmt.setString(1, username);
+            ResultSet rs = userStmt.executeQuery();
+            if (rs.next()) {
+                int userId = rs.getInt("User_ID");
+                basketStmt.setInt(1, userId);
+                basketStmt.setInt(2, productId);
+                basketStmt.setInt(3, quantity);
+                basketStmt.executeUpdate();
+                System.out.println("Item added to basket.");
+            } else {
+                System.out.println("Username not found.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error adding to basket:");
+            e.printStackTrace();
+        }
+    }
+
+    private static void checkoutBasket(String username) {
         String getBasketQuery = "SELECT b.Product_ID, b.Quantity, p.Price FROM basket b " +
                 "JOIN user u ON b.User_ID = u.User_ID JOIN product p ON b.Product_ID = p.Product_ID WHERE u.Username = ?";
         String getUserIdQuery = "SELECT User_ID FROM user WHERE Username = ?";
@@ -137,7 +166,7 @@ public class BasketService {
                             del.executeUpdate();
                         }
                         conn.commit();
-                        System.out.println("Checkout complete. Order placed and stock updated.\n");
+                        System.out.println("Basket checked out, order placed, stock updated, and transaction logged.");
                     }
                 }
             }
