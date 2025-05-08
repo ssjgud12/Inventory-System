@@ -5,7 +5,7 @@ import java.sql.*;
 
 public class OrderService {
 
-    public static void listAllOrders() {
+    public static void viewOrders() {
         String query = "SELECT o.Order_ID, u.Username, o.Total_Amount, o.Order_Date " +
                 "FROM orders o JOIN user u ON o.User_ID = u.User_ID ORDER BY o.Order_Date DESC";
 

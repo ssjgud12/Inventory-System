@@ -3,10 +3,11 @@ package ie.atu.standard;
 import java.util.Scanner;
 
 public class AdminDashboard {
-    public static void show(Scanner scanner) {
-        boolean loggedIn = true;
 
-        while (loggedIn) {
+    public static void show(Scanner scanner) {
+        boolean running = true;
+
+        while (running) {
             System.out.println("\n=== Admin Dashboard ===\n");
             System.out.println("1. View Users");
             System.out.println("2. Manage Products");
@@ -17,15 +18,26 @@ public class AdminDashboard {
             String choice = scanner.nextLine().trim();
 
             switch (choice) {
-                case "1" -> UserService.listUsers();
-                case "2" -> ProductService.manageProducts(scanner);
-                case "3" -> OrderService.listAllOrders();
-                case "4" -> {
-                    System.out.println("\nLogging out...");
-                    loggedIn = false;
-                }
-                default -> System.out.println("\nInvalid option. Please try again.");
+                case "1":
+                    viewUsers();
+                    break;
+                case "2":
+                    ProductManagementService.manageProducts(scanner);
+                    break;
+                case "3":
+                    OrderService.viewOrders();
+                    break;
+                case "4":
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid option. Please try again.");
             }
         }
+    }
+
+    private static void viewUsers() {
+        System.out.println("\nViewing all users...");
+
     }
 }
