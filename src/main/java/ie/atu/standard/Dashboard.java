@@ -22,7 +22,7 @@ public class Dashboard {
                     handleSecondOption(scanner, role);
                     break;
                 case "3":
-                    if (role.equals("manager")) {
+                    if (role.equals("admin") || role.equals("manager")) {
                         OrderService.listAllOrders();
                     } else {
                         System.out.println("\nLogging out...");
@@ -30,8 +30,12 @@ public class Dashboard {
                     }
                     break;
                 case "4":
-                    System.out.println("\nLogging out...");
-                    loggedIn = false;
+                    if (role.equals("admin")) {
+                        System.out.println("\nLogging out...");
+                        loggedIn = false;
+                    } else {
+                        System.out.println("\nInvalid option. Please try again.");
+                    }
                     break;
                 default:
                     System.out.println("\nInvalid option. Please try again.");
@@ -43,7 +47,7 @@ public class Dashboard {
         System.out.println("\n=== " + capitalize(role) + " Dashboard ===\n");
         switch (role) {
             case "admin" -> System.out.println("1. View Users\n2. Manage Products\n3. View Orders\n4. Logout");
-            case "manager" -> System.out.println("1. View Stock Reports\n2. View Orders\n3. View Customer Orders\n4. Logout");
+            case "manager" -> System.out.println("1. View Stock Reports\n2. View Customer Orders\n3. Logout");
             default -> System.out.println("1. View & Buy Products\n2. View Basket\n3. Logout");
         }
     }
@@ -58,8 +62,7 @@ public class Dashboard {
 
     private static void handleSecondOption(Scanner scanner, String role) {
         switch (role) {
-            case "admin" -> ProductService.manageProducts(scanner);
-            case "manager" -> OrderService.listAllOrders();
+            case "admin", "manager" -> OrderService.listAllOrders();
             default -> {
                 System.out.print("Enter your username to view basket: ");
                 String username = scanner.nextLine().trim();
