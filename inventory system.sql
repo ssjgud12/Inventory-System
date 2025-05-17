@@ -23,8 +23,16 @@ CREATE TABLE `user` (
 INSERT INTO `user` VALUES
 (1,'sam','sam@example.com','083-306-4831','Admin','sam123'),
 (2,'daniel','daniel@example.com','083-409-8943','Manager','1234'),
-(3,'guest','guest@example.com','123-456-7890','Customer','guest1'),
-(4,'user','user@example.com','234-156-2345','Customer','test');
+(3,'mary','mary@example.com','089-251-7709','Customer','guest1'),
+(4,'john','doe@example.com','089-959-0358','Customer','renmore24');
+(5,'riad','bouss@example.com','087-455-9098','Customer','smartt');
+(6,'vicky','vicky@example.com','083-777-2345','Customer','cooking');
+(7,'soma','yuki@example.com','897-484-3450','Customer','spices');
+(8,'arthur','pencilgon@example.com','087-677-9000','Customer','bball');
+(9,'erina','alice@example.com','879-942-2345','Customer','tenths');
+(10,'judge','vinsmoke@example.com','086-156-2345','Customer','germa');
+
+
 
 -- Create category table
 DROP TABLE IF EXISTS `category`;
